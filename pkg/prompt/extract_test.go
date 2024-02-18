@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-// TestExtractJavaScriptSuccess tests the successful extraction of JavaScript code
-func TestExtractJavaScriptSuccess(t *testing.T) {
+// TestExtractCodeSuccess tests the successful extraction of Code code
+func TestExtractCodeSuccess(t *testing.T) {
 	tests := []struct {
 		name     string
 		body     string
@@ -41,7 +41,7 @@ func TestExtractJavaScriptSuccess(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			js, err := extractJavaScript(tc.body)
+			js, err := extractCode(tc.body)
 			if err != nil {
 				t.Errorf("Expected no error, got %v", err)
 			}
@@ -53,10 +53,10 @@ func TestExtractJavaScriptSuccess(t *testing.T) {
 	}
 }
 
-// TestExtractJavaScriptFailure tests the function's handling of inputs that should result in errors
-func TestExtractJavaScriptFailure(t *testing.T) {
-	body := "This is not a JavaScript code block."
-	_, err := extractJavaScript(body)
+// TestExtractCodeFailure tests the function's handling of inputs that should result in errors
+func TestExtractCodeFailure(t *testing.T) {
+	body := "This is not a code block."
+	_, err := extractCode(body)
 	if err == nil {
 		t.Error("Expected an error, but got nil")
 	}
