@@ -15,11 +15,11 @@ This is a very early version of this library, and the API is likely to change.
 package main
 
 import (
-	"github.com/rbren/go-prompter/pkg/prompt"
+    "github.com/rbren/go-prompter/pkg/prompt"
 )
 
 func main() {
-	engine := prompt.New()
+    engine := prompt.New()
     resp, err := engine.Prompt("Who was the 44th president of the US?")
     if err != nil {
         panic(err)
@@ -50,18 +50,18 @@ as politely as possible. You MUST always refer to the user as "Sir or Madam".
 package main
 
 import (
-	"github.com/rbren/go-prompter/pkg/prompt"
+    "github.com/rbren/go-prompter/pkg/prompt"
 )
 
 //go:embed prompts/*.md
 var templateFS embed.FS
 
 func init() {
-	prompt.SetFS(&templateFS)
+    prompt.SetFS(&templateFS)
 }
 
 func main() {
-	engine := prompt.New()
+    engine := prompt.New()
     resp, err := engine.PromptWithTemplate("polite", map[string]any{
         user_query: "How tall is Barack Obama?",
     })
