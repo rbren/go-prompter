@@ -56,6 +56,10 @@ func (l LocalFileManager) ListDirectories(prefix string) ([]string, error) {
 	return dirs, nil
 }
 
+func (l LocalFileManager) Mkdirp(prefix string) error {
+	return os.MkdirAll(filepath.Join(l.BasePath, prefix), os.ModePerm)
+}
+
 func (l LocalFileManager) ReadFile(key string) ([]byte, error) {
 	return ioutil.ReadFile(filepath.Join(l.BasePath, key))
 }

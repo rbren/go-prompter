@@ -71,6 +71,11 @@ func (m S3Manager) ListDirectories(prefix string) ([]string, error) {
 	return items, nil
 }
 
+func (m S3Manager) Mkdirp(path string) error {
+	// directories aren't really a thing in S3, so we don't need to do anything here
+	return nil
+}
+
 // ReadFile reads the content of a file from the S3 bucket.
 func (m S3Manager) ReadFile(key string) ([]byte, error) {
 	logrus.Infof("ReadFile: %s", key)

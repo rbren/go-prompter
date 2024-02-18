@@ -9,6 +9,7 @@ import (
 type FileManager interface {
 	ListFilesRecursive(prefix string) ([]string, error)
 	ListDirectories(prefix string) ([]string, error)
+	Mkdirp(key string) error
 	ReadFile(key string) ([]byte, error)
 	ReadJSON(key string, v interface{}) error
 	WriteFile(key string, content []byte) error
