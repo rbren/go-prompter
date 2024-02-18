@@ -10,6 +10,20 @@ This is a very early version of this library, and the API is likely to change.
 * Hugging Face (experimental)
 
 ## Usage
+### Environment Variables
+Currently you need to use env vars to choose a backend and supply credentials.
+```
+export HUGGING_FACE_API_KEY="hf_..."
+export HUGGING_FACE_URL="https://api-inference.huggingface.co/models/codellama/CodeLlama-70b-Instruct-hf"
+
+export OPENAI_API_KEY="sk-..."
+export OPENAI_MODEL="gpt-4-0125-preview"
+
+export GEMINI_API_KEY="AI..."
+
+export LLM_BACKEND="OPENAI"
+```
+
 ### Minimal Example
 ```go
 package main
