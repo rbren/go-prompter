@@ -53,7 +53,7 @@ func (c *Engine) PromptJSONWithTemplate(template string, data map[string]any, de
 		return err
 	}
 	// TODO: handle arrays
-	jsonString, err := extractJSONObject(resp)
+	jsonString, err := ExtractJSONObject(resp)
 	if err != nil {
 		return err
 	}

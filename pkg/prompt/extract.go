@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func extractDelimiters(body, startDelim, endDelim string) (string, error) {
+func ExtractDelimiters(body, startDelim, endDelim string) (string, error) {
 	firstIndex := strings.Index(body, startDelim)
 	lastIndex := strings.LastIndex(body, endDelim)
 	if firstIndex == -1 || lastIndex == -1 {
@@ -16,7 +16,7 @@ func extractDelimiters(body, startDelim, endDelim string) (string, error) {
 	return body[firstIndex+len(startDelim) : lastIndex], nil
 }
 
-func extractTitle(body string) (string, error) {
+func ExtractTitle(body string) (string, error) {
 	lines := strings.Split(body, "\n")
 	for _, line := range lines {
 		if strings.HasPrefix(line, "# ") {
@@ -26,8 +26,8 @@ func extractTitle(body string) (string, error) {
 	return "", nil
 }
 
-func extractJSONObject(body string) (string, error) {
-	json, err := extractDelimiters(body, "{", "}")
+func ExtractJSONObject(body string) (string, error) {
+	json, err := ExtractDelimiters(body, "{", "}")
 	if err != nil {
 		logrus.Errorf("invalid JSON response from LLM: %s", body)
 		return "", errors.New("invalid JSON")
@@ -35,7 +35,7 @@ func extractJSONObject(body string) (string, error) {
 	return "{" + json + "}", nil
 }
 
-func extractCode(body string) (string, error) {
+func ExtractCode(body string) (string, error) {
 	blocks := strings.Split("\n"+body+"\n", "```")
 	// blocks 0 is preamble
 	// block 1 is first code

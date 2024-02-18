@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// TestExtractCodeSuccess tests the successful extraction of Code code
+// TestExtractCodeSuccess tests the successful Extraction of Code code
 func TestExtractCodeSuccess(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -41,7 +41,7 @@ func TestExtractCodeSuccess(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			js, err := extractCode(tc.body)
+			js, err := ExtractCode(tc.body)
 			if err != nil {
 				t.Errorf("Expected no error, got %v", err)
 			}
@@ -56,7 +56,7 @@ func TestExtractCodeSuccess(t *testing.T) {
 // TestExtractCodeFailure tests the function's handling of inputs that should result in errors
 func TestExtractCodeFailure(t *testing.T) {
 	body := "This is not a code block."
-	_, err := extractCode(body)
+	_, err := ExtractCode(body)
 	if err == nil {
 		t.Error("Expected an error, but got nil")
 	}
