@@ -3,6 +3,8 @@ package prompt
 import (
 	"embed"
 	"encoding/json"
+	"text/template"
+
 
 	"github.com/google/uuid"
 
@@ -10,9 +12,14 @@ import (
 )
 
 var templateFS *embed.FS
+var templateFuncMap template.FuncMap
 
 func SetFS(f *embed.FS) {
 	templateFS = f
+}
+
+func SetTemplateFuncMap(funcMap template.FuncMap) {
+	templateFuncMap = funcMap
 }
 
 type Engine struct {
