@@ -9,8 +9,6 @@ import (
 	"net/http"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/rbren/go-prompter/pkg/files"
 )
 
 // OpenAIRequest represents the request body for OpenAI API.
@@ -40,7 +38,6 @@ type OpenAIResponse struct {
 type OpenAIClient struct {
 	APIKey      string
 	Model       string
-	FileManager files.FileManager
 	Seed        int
 }
 
@@ -52,29 +49,9 @@ func NewOpenAIClient(apiKey, model string) *OpenAIClient {
 	}
 }
 
-func (c *OpenAIClient) Copy() Client {
-	return &OpenAIClient{
-		APIKey:      c.APIKey,
-		Model:       c.Model,
-		FileManager: c.FileManager,
-		Seed:        c.Seed,
-	}
-}
-
-func (c *OpenAIClient) SetDebugFileManager(mgr files.FileManager) {
-	c.FileManager = mgr
-}
-
 // Query sends a prompt to the OpenAI API and returns the response.
 func (c *OpenAIClient) Query(id string, prompt string) (string, error) {
 	systemPrompt := "The following is a conversation with an AI assistant."
-
-	if c.FileManager != nil {
-		err := c.FileManager.WriteFile(id+"/request.md", []byte(prompt))
-		if err != nil {
-			return "", err
-		}
-	}
 
 	requestBody, err := json.Marshal(OpenAIRequest{
 		Seed: c.Seed,
@@ -131,12 +108,6 @@ func (c *OpenAIClient) Query(id string, prompt string) (string, error) {
 	if len(response.Choices) == 0 {
 		return "", fmt.Errorf("no response from OpenAI")
 	}
-
-	if c.FileManager != nil {
-		err := c.FileManager.WriteFile(id+"/response.md", []byte(response.Choices[0].Message.Content))
-		if err != nil {
-			return "", err
-		}
-	}
-	return response.Choices[0].Message.Content, nil
+	out := response.Choices[0].Message.Content
+	return out, nil
 }

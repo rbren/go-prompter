@@ -4,14 +4,10 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/rbren/go-prompter/pkg/files"
 )
 
 type Client interface {
 	Query(string, string) (string, error)
-	Copy() Client
-	SetDebugFileManager(files.FileManager)
 }
 
 func New() Client {

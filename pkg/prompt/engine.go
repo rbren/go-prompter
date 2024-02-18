@@ -2,7 +2,8 @@ package prompt
 
 import (
 	"embed"
-	"encoding/json"
+
+	"github.com/google/uuid"
 
 	"github.com/rbren/go-prompter/pkg/llm"
 )
@@ -15,6 +16,7 @@ func SetFS(f *embed.FS) {
 
 type Engine struct {
 	LLM llm.Client
+	SessionID string
 }
 
 func New() *Engine {
@@ -23,10 +25,23 @@ func New() *Engine {
 	}
 }
 
+func (c *Engine) WithSession(sessionID string) *Engine {
+	if sessionID == "" {
+		sessionID = uuid.New().String()
+	}
+	return &Engine{
+		SessionID: sessionID,
+		LLM: c.LLM,
+	}
+}
+
 func (c *Engine) QueryWithTemplate(template string, data map[string]interface{}) (string, error) {
 	prompt, err := fillTemplate(template, data)
 	if err != nil {
 		return "", err
 	}
-	return c.LLM.Query(template, prompt)
+	go writeDebugRequest(c.SessionID, template, prompt)
+	resp, err := c.LLM.Query(template, prompt)
+	go writeDebugResponse(c.SessionID, template, resp)
+	return resp, err
 }

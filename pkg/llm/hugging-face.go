@@ -8,8 +8,6 @@ import (
 	"strings"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/rbren/go-prompter/pkg/files"
 )
 
 // HuggingFaceRequest represents the request body for HuggingFace API.
@@ -25,7 +23,6 @@ type HuggingFaceResponse struct {
 type HuggingFaceClient struct {
 	URL         string
 	APIKey      string
-	FileManager files.FileManager
 }
 
 // NewHuggingFaceClient creates a new HuggingFace API client.
@@ -36,31 +33,12 @@ func NewHuggingFaceClient(apiKey, url string) *HuggingFaceClient {
 	}
 }
 
-func (c *HuggingFaceClient) Copy() Client {
-	return &HuggingFaceClient{
-		APIKey:      c.APIKey,
-		URL:         c.URL,
-		FileManager: c.FileManager,
-	}
-}
-
-func (c *HuggingFaceClient) SetDebugFileManager(mgr files.FileManager) {
-	c.FileManager = mgr
-}
-
 // Query sends a prompt to the HuggingFace API and returns the response.
 func (c *HuggingFaceClient) Query(id string, prompt string) (string, error) {
 	systemPrompt := "<s>Source: system\n\nThe following is a conversation with an AI assistant."
 	stepPrompt := " <step> Source: user\n\n" + prompt
 	destPrompt := " <step> Source: assistant\nDestination: user\n\n"
 	finalPrompt := systemPrompt + stepPrompt + destPrompt
-
-	if c.FileManager != nil {
-		err := c.FileManager.WriteFile(id+"/request.md", []byte(prompt))
-		if err != nil {
-			return "", err
-		}
-	}
 
 	requestBody, err := json.Marshal(HuggingFaceRequest{
 		Inputs: finalPrompt,
@@ -100,11 +78,5 @@ func (c *HuggingFaceClient) Query(id string, prompt string) (string, error) {
 	out := response[0]["generated_text"].(string)
 	out = strings.TrimPrefix(out, prompt)
 
-	if c.FileManager != nil {
-		err := c.FileManager.WriteFile(id+"/response.md", []byte(out))
-		if err != nil {
-			return "", err
-		}
-	}
 	return out, nil
 }

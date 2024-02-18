@@ -8,8 +8,6 @@ import (
 	"net/http"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/rbren/go-prompter/pkg/files"
 )
 
 const URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
@@ -34,7 +32,6 @@ type GeminiResponse struct {
 
 type Gemini struct {
 	APIKey      string
-	FileManager files.FileManager
 }
 
 func NewGeminiClient(apiKey string) *Gemini {
@@ -43,24 +40,7 @@ func NewGeminiClient(apiKey string) *Gemini {
 	}
 }
 
-func (g *Gemini) Copy() Client {
-	return &Gemini{
-		APIKey:      g.APIKey,
-		FileManager: g.FileManager,
-	}
-}
-
-func (g *Gemini) SetDebugFileManager(fm files.FileManager) {
-	g.FileManager = fm
-}
-
 func (g *Gemini) Query(id, prompt string) (string, error) {
-	if g.FileManager != nil {
-		err := g.FileManager.WriteFile(id+"/request.md", []byte(prompt))
-		if err != nil {
-			return "", err
-		}
-	}
 	request := GeminiRequest{
 		Contents: []struct {
 			Parts []struct {
@@ -113,11 +93,5 @@ func (g *Gemini) Query(id, prompt string) (string, error) {
 		return "", errors.New("no parts")
 	}
 	text := response.Candidates[0].Content.Parts[0].Text
-	if g.FileManager != nil {
-		err := g.FileManager.WriteFile(id+"/response.md", []byte(text))
-		if err != nil {
-			return "", err
-		}
-	}
 	return text, nil
 }
