@@ -2,6 +2,7 @@ package prompt
 
 import (
 	"embed"
+	"encoding/json"
 
 	"github.com/google/uuid"
 
@@ -35,7 +36,7 @@ func (c *Engine) WithSession(sessionID string) *Engine {
 	}
 }
 
-func (c *Engine) QueryWithTemplate(template string, data map[string]interface{}) (string, error) {
+func (c *Engine) PromptWithTemplate(template string, data map[string]any) (string, error) {
 	prompt, err := fillTemplate(template, data)
 	if err != nil {
 		return "", err
@@ -44,4 +45,17 @@ func (c *Engine) QueryWithTemplate(template string, data map[string]interface{})
 	resp, err := c.LLM.Query(template, prompt)
 	go writeDebugResponse(c.SessionID, template, resp)
 	return resp, err
+}
+
+func (c *Engine) PromptJSONWithTemplate(template string, data map[string]any, dest any) (error) {
+	resp, err := c.PromptWithTemplate(template, data)
+	if err != nil {
+		return err
+	}
+	// TODO: handle arrays
+	jsonString, err := extractJSONObject(resp)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal([]byte(jsonString), dest)
 }
