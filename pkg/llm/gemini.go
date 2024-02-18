@@ -9,7 +9,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/rbren/vizzy/pkg/files"
+	"github.com/rbren/go-prompter/pkg/files"
 )
 
 const URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"

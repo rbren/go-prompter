@@ -5,7 +5,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/rbren/vizzy/pkg/files"
+	"github.com/rbren/go-prompter/pkg/files"
 )
 
 type Client interface {

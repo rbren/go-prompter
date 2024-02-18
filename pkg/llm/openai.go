@@ -10,7 +10,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/rbren/vizzy/pkg/files"
+	"github.com/rbren/go-prompter/pkg/files"
 )
 
 // OpenAIRequest represents the request body for OpenAI API.

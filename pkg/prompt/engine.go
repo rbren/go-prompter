@@ -4,8 +4,7 @@ import (
 	"embed"
 	"encoding/json"
 
-	"github.com/rbren/llm-headlines/pkg/llm"
-	"github.com/rbren/llm-headlines/pkg/models"
+	"github.com/rbren/go-prompter/pkg/llm"
 )
 
 var templateFS *embed.FS
