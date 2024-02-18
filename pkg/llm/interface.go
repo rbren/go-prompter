@@ -7,7 +7,7 @@ import (
 )
 
 type Client interface {
-	Query(string, string) (string, error)
+	Query(string) (string, error)
 }
 
 func New() Client {

@@ -50,7 +50,7 @@ func NewOpenAIClient(apiKey, model string) *OpenAIClient {
 }
 
 // Query sends a prompt to the OpenAI API and returns the response.
-func (c *OpenAIClient) Query(id string, prompt string) (string, error) {
+func (c *OpenAIClient) Query(prompt string) (string, error) {
 	systemPrompt := "The following is a conversation with an AI assistant."
 
 	requestBody, err := json.Marshal(OpenAIRequest{

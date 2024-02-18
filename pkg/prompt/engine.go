@@ -2,7 +2,6 @@ package prompt
 
 import (
 	"embed"
-	"encoding/json"
 	"text/template"
 
 
@@ -43,26 +42,3 @@ func (c *Engine) WithSession(sessionID string) *Engine {
 	}
 }
 
-func (c *Engine) PromptWithTemplate(template string, data map[string]any) (string, error) {
-	prompt, err := fillTemplate(template, data)
-	if err != nil {
-		return "", err
-	}
-	go writeDebugRequest(c.SessionID, template, prompt)
-	resp, err := c.LLM.Query(template, prompt)
-	go writeDebugResponse(c.SessionID, template, resp)
-	return resp, err
-}
-
-func (c *Engine) PromptJSONWithTemplate(template string, data map[string]any, dest any) (error) {
-	resp, err := c.PromptWithTemplate(template, data)
-	if err != nil {
-		return err
-	}
-	// TODO: handle arrays
-	jsonString, err := ExtractJSONObject(resp)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal([]byte(jsonString), dest)
-}
