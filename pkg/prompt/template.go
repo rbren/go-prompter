@@ -8,8 +8,7 @@ import (
 
 func fillTemplate(fileName string, data map[string]interface{}) (string, error) {
 	// Parse the template
-	tmpl, err := template.New("tmpl").Funcs(template.FuncMap{
-	}).ParseFS(templateFS, "prompts/*.md")
+	tmpl, err := template.New("tmpl").Funcs(template.FuncMap{}).ParseFS(templateFS, "prompts/*.md")
 	if err != nil {
 		return "", err
 	}

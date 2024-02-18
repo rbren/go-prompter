@@ -30,4 +30,3 @@ func (c *Engine) QueryWithTemplate(template string, data map[string]interface{})
 	}
 	return c.LLM.Query(template, prompt)
 }
-
