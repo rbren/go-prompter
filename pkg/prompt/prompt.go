@@ -9,9 +9,9 @@ func (c *Engine) Prompt(prompt string) (string, error) {
 }
 
 func (c *Engine) PromptWithID(id, prompt string) (string, error) {
-	go writeDebugRequest(c.SessionID, id, prompt)
+	writeDebugRequest(c.SessionID, id, prompt)
 	resp, err := c.LLM.Query(prompt)
-	go writeDebugResponse(c.SessionID, id, resp)
+	writeDebugResponse(c.SessionID, id, resp)
 	return resp, err
 }
 
