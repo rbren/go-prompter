@@ -122,7 +122,8 @@ func (m S3Manager) CheckFileExists(key string) (bool, error) {
 		Key:    &key,
 	})
 	if err != nil {
-		return false, err
+		// TODO: handle specific 'NotFound' error
+		return false, nil
 	}
 	return true, nil
 }
