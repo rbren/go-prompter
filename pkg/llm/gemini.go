@@ -40,7 +40,7 @@ func NewGeminiClient(apiKey string) *Gemini {
 	}
 }
 
-func (g *Gemini) Query(prompt string) (string, error) {
+func (g *Gemini) Query(prompt string, history []ChatMessage) (string, error) {
 	request := GeminiRequest{
 		Contents: []struct {
 			Parts []struct {

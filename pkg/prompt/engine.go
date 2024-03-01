@@ -23,7 +23,9 @@ func SetTemplateFuncMap(funcMap template.FuncMap) {
 
 type Engine struct {
 	LLM llm.Client
+	History []llm.ChatMessage
 	SessionID string
+	SaveHistory bool
 }
 
 func New() *Engine {

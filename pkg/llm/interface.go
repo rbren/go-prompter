@@ -6,8 +6,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type ChatMessage struct {
+	From string
+	Message string
+}
+
 type Client interface {
-	Query(string) (string, error)
+	Query(string, []ChatMessage) (string, error)
 }
 
 func New() Client {

@@ -34,7 +34,7 @@ func NewHuggingFaceClient(apiKey, url string) *HuggingFaceClient {
 }
 
 // Query sends a prompt to the HuggingFace API and returns the response.
-func (c *HuggingFaceClient) Query(prompt string) (string, error) {
+func (c *HuggingFaceClient) Query(prompt string, history []ChatMessage) (string, error) {
 	systemPrompt := "<s>Source: system\n\nThe following is a conversation with an AI assistant."
 	stepPrompt := " <step> Source: user\n\n" + prompt
 	destPrompt := " <step> Source: assistant\nDestination: user\n\n"

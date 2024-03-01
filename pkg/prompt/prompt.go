@@ -10,7 +10,9 @@ func (c *Engine) Prompt(prompt string) (string, error) {
 
 func (c *Engine) PromptWithID(id, prompt string) (string, error) {
 	writeDebugRequest(c.SessionID, id, prompt)
-	resp, err := c.LLM.Query(prompt)
+	c.AddUserMessage(prompt)
+	resp, err := c.LLM.Query(prompt, c.History)
+	c.AddBotMessage(resp)
 	writeDebugResponse(c.SessionID, id, resp)
 	return resp, err
 }

@@ -50,18 +50,27 @@ func NewOpenAIClient(apiKey, model string) *OpenAIClient {
 }
 
 // Query sends a prompt to the OpenAI API and returns the response.
-func (c *OpenAIClient) Query(prompt string) (string, error) {
+func (c *OpenAIClient) Query(prompt string, history []ChatMessage) (string, error) {
 	systemPrompt := "The following is a conversation with an AI assistant."
+
+	messages := []OpenAIMessage{{
+		Role:    "system",
+		Content: systemPrompt,
+	}}
+	for _, m := range history {
+		messages = append(messages, OpenAIMessage{
+			Role:    m.From,
+			Content: m.Message,
+		})
+	}
+	messages = append(messages, OpenAIMessage{
+		Role:    "user",
+		Content: prompt,
+	})
 
 	requestBody, err := json.Marshal(OpenAIRequest{
 		Seed: c.Seed,
-		Messages: []OpenAIMessage{{
-			Role:    "system",
-			Content: systemPrompt,
-		}, {
-			Role:    "user",
-			Content: prompt,
-		}},
+		Messages: messages,
 		Model: c.Model,
 	})
 	if err != nil {
