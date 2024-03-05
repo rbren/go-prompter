@@ -100,12 +100,9 @@ import (
 //go:embed prompts/*.md
 var templateFS embed.FS
 
-func init() {
-    prompt.SetFS(&templateFS)
-}
-
 func main() {
     session := chat.NewSession()
+    session.SetFS(&templateFS)
     resp, err := session.PromptWithTemplate("polite", map[string]any{
         user_query: "How tall is Barack Obama?",
     })
