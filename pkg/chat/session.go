@@ -38,4 +38,3 @@ func (s *Session) SetFS(f *embed.FS) {
 func (s *Session) SetTemplateFuncMap(funcMap template.FuncMap) {
 	s.templateFuncMap = funcMap
 }
-

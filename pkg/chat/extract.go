@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"encoding/json"
 	"errors"
 	"strings"
 
@@ -17,8 +18,8 @@ func ExtractDelimiters(body, startDelim, endDelim string) (string, error) {
 	return body[firstIndex+len(startDelim) : lastIndex], nil
 }
 
-// ExtractTitle finds and returns the title from the provided text.
-func ExtractTitle(body string) (string, error) {
+// ExtractMarkdownTitle finds and returns the title from the provided text.
+func ExtractMarkdownTitle(body string) (string, error) {
 	lines := strings.Split(body, "\n")
 	for _, line := range lines {
 		if strings.HasPrefix(line, "# ") {
@@ -36,6 +37,14 @@ func ExtractJSONObject(body string) (string, error) {
 		return "", errors.New("invalid JSON")
 	}
 	return "{" + json + "}", nil
+}
+
+func ExtractJSONAndUnmarshal(body string, v interface{}) error {
+	j, err := ExtractJSONObject(body)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal([]byte(j), v)
 }
 
 // ExtractCode attempts to find and return the longest code block in the given text.
@@ -64,4 +73,3 @@ func ExtractCode(body string) (string, error) {
 	}
 	return longestBody, nil
 }
-

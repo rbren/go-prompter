@@ -25,4 +25,3 @@ func (s *Session) AddBotMessage(msg string) {
 		Message: msg,
 	})
 }
-

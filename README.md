@@ -113,6 +113,38 @@ func main() {
 }
 ```
 
+### Extract JSON, Markdown, and Code
+You can extract JSON, Markdown, and code from the response.
+
+```go
+package main
+
+import (
+    "github.com/rbren/go-prompter/pkg/chat"
+)
+
+type Person struct {
+  Height int `json:"height"`
+  Age    int `json:"age"`
+}
+
+func main() {
+    session := chat.NewSession()
+    resp, _ := session.Prompt("Please tell me Obama's height in inches and age in years. Respond in JSON format.")
+    p := Person{}
+    _ = chat.ExtractJSONAndUnmarshal(resp, &p)
+
+    resp, _ := session.Prompt("Write a bash script that prints Obama's height and age.")
+    code := chat.ExtractCode(resp)
+
+    resp, _ := session.Prompt("Write an essay in Markdown about Obama")
+    title := chat.ExtractMarkdownTitle(resp)
+
+
+    fmt.Println(resp) // "Barack Obama was the 44th president."
+}
+```
+
 ### Send Chat History as Context
 You can optionally send the entire session history to the model as context.
 Be sure to start a new session when you want to clear the context, and don't

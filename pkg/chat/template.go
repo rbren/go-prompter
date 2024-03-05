@@ -26,4 +26,3 @@ func (s *Session) fillTemplate(fileName string, data map[string]interface{}) (st
 	}
 	return filledTemplate.String(), nil
 }
-

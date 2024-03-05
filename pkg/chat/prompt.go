@@ -28,8 +28,8 @@ func (s *Session) PromptWithTemplate(template string, data map[string]any) (stri
 	return s.PromptWithID(template, prompt)
 }
 
-// PromptJSONWithTemplate sends a templated prompt to the LLM, receives a response, and attempts to unmarshal it into a provided structure.
-func (s *Session) PromptJSONWithTemplate(template string, data map[string]any, dest any) error {
+// PromptWithTemplateToJSON sends a templated prompt to the LLM, receives a response, and attempts to unmarshal it into a provided structure.
+func (s *Session) PromptWithTemplateToJSON(template string, data map[string]any, dest any) error {
 	resp, err := s.PromptWithTemplate(template, data)
 	if err != nil {
 		return err
@@ -41,4 +41,3 @@ func (s *Session) PromptJSONWithTemplate(template string, data map[string]any, d
 	}
 	return json.Unmarshal([]byte(jsonString), dest)
 }
-

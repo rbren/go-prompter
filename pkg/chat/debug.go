@@ -39,4 +39,3 @@ func (s *Session) writeDebugFile(sessionID, promptID string, isRequest bool, con
 		logrus.WithError(err).Errorf("Error saving ouptut to debug file %s", filename)
 	}
 }
-
