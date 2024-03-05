@@ -6,6 +6,7 @@ import (
 	"text/template"
 )
 
+// fillTemplate fills a specified template with data and returns the resultant string.
 func (s *Session) fillTemplate(fileName string, data map[string]interface{}) (string, error) {
 	// Parse the template
 	tmpl, err := template.New("tmpl").Funcs(s.templateFuncMap).ParseFS(s.templateFS, "prompts/*.md")
@@ -25,3 +26,4 @@ func (s *Session) fillTemplate(fileName string, data map[string]interface{}) (st
 	}
 	return filledTemplate.String(), nil
 }
+

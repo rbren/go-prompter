@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// ExtractDelimiters extracts content between specified delimiters.
 func ExtractDelimiters(body, startDelim, endDelim string) (string, error) {
 	firstIndex := strings.Index(body, startDelim)
 	lastIndex := strings.LastIndex(body, endDelim)
@@ -16,6 +17,7 @@ func ExtractDelimiters(body, startDelim, endDelim string) (string, error) {
 	return body[firstIndex+len(startDelim) : lastIndex], nil
 }
 
+// ExtractTitle finds and returns the title from the provided text.
 func ExtractTitle(body string) (string, error) {
 	lines := strings.Split(body, "\n")
 	for _, line := range lines {
@@ -26,6 +28,7 @@ func ExtractTitle(body string) (string, error) {
 	return "", nil
 }
 
+// ExtractJSONObject attempts to extract a JSON object from the given text.
 func ExtractJSONObject(body string) (string, error) {
 	json, err := ExtractDelimiters(body, "{", "}")
 	if err != nil {
@@ -35,6 +38,7 @@ func ExtractJSONObject(body string) (string, error) {
 	return "{" + json + "}", nil
 }
 
+// ExtractCode attempts to find and return the longest code block in the given text.
 func ExtractCode(body string) (string, error) {
 	blocks := strings.Split("\n"+body+"\n", "```")
 	// blocks 0 is preamble
@@ -60,3 +64,4 @@ func ExtractCode(body string) (string, error) {
 	}
 	return longestBody, nil
 }
+
