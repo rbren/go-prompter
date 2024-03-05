@@ -1,4 +1,4 @@
-package prompt
+package chat
 
 import (
 	"fmt"
@@ -6,9 +6,9 @@ import (
 	"text/template"
 )
 
-func fillTemplate(fileName string, data map[string]interface{}) (string, error) {
+func (s *Session) fillTemplate(fileName string, data map[string]interface{}) (string, error) {
 	// Parse the template
-	tmpl, err := template.New("tmpl").Funcs(templateFuncMap).ParseFS(templateFS, "prompts/*.md")
+	tmpl, err := template.New("tmpl").Funcs(s.templateFuncMap).ParseFS(s.templateFS, "prompts/*.md")
 	if err != nil {
 		return "", err
 	}

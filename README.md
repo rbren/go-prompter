@@ -14,6 +14,7 @@ This is a very early version of this library, and the API is likely to change.
 * Session management (only OpenAI currently)
 * Craft prompts using Go's text templating engine
 * Extract JSON, Markdown, and code from responses
+* Save prompts and responses to local files or S3 for debugging and analysis
 
 ## Usage
 
@@ -22,11 +23,12 @@ This is a very early version of this library, and the API is likely to change.
 package main
 
 import (
-    "github.com/rbren/go-prompter/pkg/prompt"
+    "github.com/rbren/go-prompter/pkg/chat"
 )
 
 func main() {
-    resp, err := engine.Prompt("Who was the 44th president of the US?")
+    session := chat.NewSession()
+    resp, err := session.Prompt("Who was the 44th president of the US?")
     if err != nil {
         panic(err)
     }
@@ -58,7 +60,7 @@ You can also instantiate a specific model directly:
 package main
 
 import (
-    "github.com/rbren/go-prompter/pkg/prompt"
+    "github.com/rbren/go-prompter/pkg/chat"
 )
 
 func main() {
@@ -92,7 +94,7 @@ as politely as possible. You MUST always refer to the user as "Sir or Madam".
 package main
 
 import (
-    "github.com/rbren/go-prompter/pkg/prompt"
+    "github.com/rbren/go-prompter/pkg/chat"
 )
 
 //go:embed prompts/*.md
@@ -103,8 +105,8 @@ func init() {
 }
 
 func main() {
-    engine := prompt.New()
-    resp, err := engine.PromptWithTemplate("polite", map[string]any{
+    session := chat.NewSession()
+    resp, err := session.PromptWithTemplate("polite", map[string]any{
         user_query: "How tall is Barack Obama?",
     })
     if err != nil {

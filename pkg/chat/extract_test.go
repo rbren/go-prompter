@@ -1,4 +1,4 @@
-package prompt
+package chat
 
 import (
 	"strings"

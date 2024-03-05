@@ -7,7 +7,7 @@ import (
 )
 
 type ChatMessage struct {
-	From string
+	From    string
 	Message string
 }
 

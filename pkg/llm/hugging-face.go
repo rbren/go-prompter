@@ -21,8 +21,8 @@ type HuggingFaceResponse struct {
 
 // HuggingFaceClient holds the information needed to make requests to the HuggingFace API.
 type HuggingFaceClient struct {
-	URL         string
-	APIKey      string
+	URL    string
+	APIKey string
 }
 
 // NewHuggingFaceClient creates a new HuggingFace API client.

@@ -31,7 +31,7 @@ type GeminiResponse struct {
 }
 
 type Gemini struct {
-	APIKey      string
+	APIKey string
 }
 
 func NewGeminiClient(apiKey string) *Gemini {

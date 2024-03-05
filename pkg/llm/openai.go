@@ -36,9 +36,9 @@ type OpenAIResponse struct {
 
 // OpenAIClient holds the information needed to make requests to the OpenAI API.
 type OpenAIClient struct {
-	APIKey      string
-	Model       string
-	Seed        int
+	APIKey string
+	Model  string
+	Seed   int
 }
 
 // NewOpenAIClient creates a new OpenAI API client.
@@ -69,9 +69,9 @@ func (c *OpenAIClient) Query(prompt string, history []ChatMessage) (string, erro
 	})
 
 	requestBody, err := json.Marshal(OpenAIRequest{
-		Seed: c.Seed,
+		Seed:     c.Seed,
 		Messages: messages,
-		Model: c.Model,
+		Model:    c.Model,
 	})
 	if err != nil {
 		return "", err
