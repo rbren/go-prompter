@@ -21,6 +21,7 @@ type S3Manager struct {
 	BucketName string
 }
 
+// newS3Manager creates a new instance of S3Manager.
 func newS3Manager() (S3Manager, error) {
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
 		config.WithRegion(os.Getenv("AWS_REGION")),
@@ -35,6 +36,7 @@ func newS3Manager() (S3Manager, error) {
 	}, nil
 }
 
+// ListFilesRecursive lists all files under a given prefix recursively.
 func (m S3Manager) ListFilesRecursive(prefix string) ([]string, error) {
 	listResult, err := m.Client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
 		Bucket: &m.BucketName,
@@ -50,7 +52,7 @@ func (m S3Manager) ListFilesRecursive(prefix string) ([]string, error) {
 	return files, nil
 }
 
-// ListDirectories lists the files in the specified S3 bucket.
+// ListDirectories lists the directories under a given prefix.
 func (m S3Manager) ListDirectories(prefix string) ([]string, error) {
 	resp, err := m.Client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
 		Bucket:    &m.BucketName,
@@ -71,6 +73,7 @@ func (m S3Manager) ListDirectories(prefix string) ([]string, error) {
 	return items, nil
 }
 
+// Mkdirp simulates creating a directory in S3.
 func (m S3Manager) Mkdirp(path string) error {
 	// directories aren't really a thing in S3, so we don't need to do anything here
 	return nil
@@ -91,6 +94,7 @@ func (m S3Manager) ReadFile(key string) ([]byte, error) {
 	return ioutil.ReadAll(output.Body)
 }
 
+// ReadJSON reads a JSON file from S3 into a variable.
 func (m S3Manager) ReadJSON(key string, v interface{}) error {
 	str, err := m.ReadFile(key)
 	if err != nil {
@@ -115,7 +119,7 @@ func (m S3Manager) WriteFile(key string, content []byte) error {
 	return nil
 }
 
-// CheckFileExists checks if a file exists in the S3 bucket.
+// CheckFileExists checks if a specific file exists in S3.
 func (m S3Manager) CheckFileExists(key string) (bool, error) {
 	_, err := m.Client.HeadObject(context.TODO(), &s3.HeadObjectInput{
 		Bucket: &m.BucketName,
@@ -128,7 +132,7 @@ func (m S3Manager) CheckFileExists(key string) (bool, error) {
 	return true, nil
 }
 
-// WriteJSON writes content to a file in the S3 bucket.
+// WriteJSON writes a variable as JSON to a file in S3.
 func (m S3Manager) WriteJSON(key string, v interface{}) error {
 	b, err := json.Marshal(v)
 	if err != nil {
@@ -137,6 +141,7 @@ func (m S3Manager) WriteJSON(key string, v interface{}) error {
 	return m.WriteFile(key, b)
 }
 
+// DeleteFile deletes a file from the S3 bucket.
 func (m S3Manager) DeleteFile(key string) error {
 	_, err := m.Client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{
 		Bucket: &m.BucketName,
@@ -148,6 +153,7 @@ func (m S3Manager) DeleteFile(key string) error {
 	return nil
 }
 
+// DeleteRecursive deletes all files under a given prefix.
 func (m S3Manager) DeleteRecursive(key string) error {
 	requiredPrefix := "projects/"
 	if !strings.HasPrefix(key, requiredPrefix) || len(key) <= len(requiredPrefix) || !strings.HasSuffix(key, "/") {
@@ -167,7 +173,7 @@ func (m S3Manager) DeleteRecursive(key string) error {
 	return nil
 }
 
-// DeleteFileIfExists checks if a file exists in the S3 bucket and deletes it if it does.
+// DeleteFileIfExists checks if a file exists in S3 and deletes it if present.
 func (m S3Manager) DeleteFileIfExists(key string) error {
 	// First, check if the file exists
 	_, err := m.Client.HeadObject(context.TODO(), &s3.HeadObjectInput{
@@ -191,7 +197,7 @@ func (m S3Manager) DeleteFileIfExists(key string) error {
 	return nil
 }
 
-// CopyDirectory copies all files from one directory to another.
+// CopyDirectory copies all files from one directory to another within S3.
 func (m S3Manager) CopyDirectory(sourcePrefix, destinationPrefix string) error {
 	logrus.Infof("Copying directory %s to %s", sourcePrefix, destinationPrefix)
 	paginator := s3.NewListObjectsV2Paginator(m.Client, &s3.ListObjectsV2Input{
@@ -227,3 +233,4 @@ func (m S3Manager) CopyDirectory(sourcePrefix, destinationPrefix string) error {
 	}
 	return nil
 }
+

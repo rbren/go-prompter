@@ -22,6 +22,7 @@ func ensureDir(filePath string) error {
 	return nil
 }
 
+// ListFilesRecursive lists all files recursively under a given directory prefix.
 func (l LocalFileManager) ListFilesRecursive(prefix string) ([]string, error) {
 	var files []string
 	err := filepath.Walk(l.BasePath+prefix,
@@ -41,6 +42,7 @@ func (l LocalFileManager) ListFilesRecursive(prefix string) ([]string, error) {
 	return files, err
 }
 
+// ListDirectories lists all directories under a given directory prefix.
 func (l LocalFileManager) ListDirectories(prefix string) ([]string, error) {
 	var dirs []string
 	fullPath := filepath.Join(l.BasePath, prefix)
@@ -56,14 +58,17 @@ func (l LocalFileManager) ListDirectories(prefix string) ([]string, error) {
 	return dirs, nil
 }
 
+// Mkdirp creates a directory and all necessary parents.
 func (l LocalFileManager) Mkdirp(prefix string) error {
 	return os.MkdirAll(filepath.Join(l.BasePath, prefix), os.ModePerm)
 }
 
+// ReadFile reads the contents of a file.
 func (l LocalFileManager) ReadFile(key string) ([]byte, error) {
 	return ioutil.ReadFile(filepath.Join(l.BasePath, key))
 }
 
+// ReadJSON reads a JSON file into a variable.
 func (l LocalFileManager) ReadJSON(key string, v interface{}) error {
 	bytes, err := l.ReadFile(key)
 	if err != nil {
@@ -72,6 +77,7 @@ func (l LocalFileManager) ReadJSON(key string, v interface{}) error {
 	return json.Unmarshal(bytes, v)
 }
 
+// WriteFile writes content to a file.
 func (l LocalFileManager) WriteFile(key string, content []byte) error {
 	fullPath := filepath.Join(l.BasePath, key)
 	if err := ensureDir(fullPath); err != nil {
@@ -80,6 +86,7 @@ func (l LocalFileManager) WriteFile(key string, content []byte) error {
 	return ioutil.WriteFile(fullPath, content, 0644)
 }
 
+// WriteJSON writes a variable as JSON to a file.
 func (l LocalFileManager) WriteJSON(key string, v interface{}) error {
 	bytes, err := json.Marshal(v)
 	if err != nil {
@@ -88,6 +95,7 @@ func (l LocalFileManager) WriteJSON(key string, v interface{}) error {
 	return l.WriteFile(key, bytes)
 }
 
+// CheckFileExists checks if a file exists at the specified path.
 func (l LocalFileManager) CheckFileExists(key string) (bool, error) {
 	_, err := os.Stat(filepath.Join(l.BasePath, key))
 	if os.IsNotExist(err) {
@@ -96,14 +104,17 @@ func (l LocalFileManager) CheckFileExists(key string) (bool, error) {
 	return err == nil, err
 }
 
+// DeleteFile deletes a file.
 func (l LocalFileManager) DeleteFile(key string) error {
 	return os.Remove(filepath.Join(l.BasePath, key))
 }
 
+// DeleteRecursive deletes a directory and all its contents.
 func (l LocalFileManager) DeleteRecursive(key string) error {
 	return os.RemoveAll(filepath.Join(l.BasePath, key))
 }
 
+// DeleteFileIfExists deletes a file if it exists.
 func (l LocalFileManager) DeleteFileIfExists(key string) error {
 	path := filepath.Join(l.BasePath, key)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -112,6 +123,7 @@ func (l LocalFileManager) DeleteFileIfExists(key string) error {
 	return os.Remove(path)
 }
 
+// CopyDirectory copies the contents of one directory to another.
 func (l LocalFileManager) CopyDirectory(sourcePrefix, destinationPrefix string) error {
 	return filepath.Walk(filepath.Join(l.BasePath, sourcePrefix),
 		func(path string, info fs.FileInfo, err error) error {
@@ -133,3 +145,4 @@ func (l LocalFileManager) CopyDirectory(sourcePrefix, destinationPrefix string) 
 			return ioutil.WriteFile(destPath, content, info.Mode())
 		})
 }
+

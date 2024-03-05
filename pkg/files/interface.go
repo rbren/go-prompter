@@ -6,6 +6,7 @@ import (
 	"sync"
 )
 
+// FileManager defines the operations for a file management system.
 type FileManager interface {
 	ListFilesRecursive(prefix string) ([]string, error)
 	ListDirectories(prefix string) ([]string, error)
@@ -24,6 +25,7 @@ type FileManager interface {
 var singleton FileManager
 var once sync.Once
 
+// GetFileManager returns a singleton FileManager instance based on environment configuration.
 func GetFileManager() FileManager {
 	once.Do(func() {
 		strategy := os.Getenv("STORAGE_STRATEGY")
@@ -55,3 +57,4 @@ func GetFileManager() FileManager {
 	})
 	return singleton
 }
+
