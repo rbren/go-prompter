@@ -116,5 +116,57 @@ func main() {
 }
 ```
 
+### Send Chat History as Context
+You can optionally send the entire session history to the model as context.
+Be sure to start a new session when you want to clear the context, and don't
+share sessions across users.
+
+```go
+package main
+
+import (
+    "github.com/rbren/go-prompter/pkg/chat"
+)
+
+func main() {
+    session := chat.NewSession()
+    session.SaveHistory = true
+    resp, err := session.Prompt("Who was the 44th president of the US?")
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(resp) // "Barack Obama was the 44th president."
+
+    resp, err := session.Prompt("How tall is he?")
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(resp) // "Barack Obama was the 44th president."
+}
+```
+
+### Save Debug Prompts and Responses
+You can save prompts and responses to local files or S3 for debugging and analysis.
+
+```go
+package main
+
+import (
+    "github.com/rbren/go-prompter/pkg/chat"
+    "github.com/rbren/go-prompter/pkg/files"
+)
+
+func main() {
+    session := chat.NewSession()
+    session.SessionID = "presidents" // this will be a random UUID otherwise
+    session.SetDebugFileManager(files.LocalFileManager{
+      BasePath: "./debug/",
+    })
+    resp, err := session.PromptWithID("44", "Who was the 44th president of the US?")
+    // creates ./debug/presidents/44/prompt.md and ./debug/presidents/44/response.md
+}
+```
+
+
 # Example Projects
 * https://github.com/rbren/vizzy
