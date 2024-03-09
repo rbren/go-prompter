@@ -80,3 +80,4 @@ func (c *HuggingFaceClient) Query(prompt string, history []ChatMessage) (string,
 
 	return out, nil
 }
+

@@ -6,22 +6,23 @@ import (
 
 // AddUserMessage adds a user message to the session history.
 func (s *Session) AddUserMessage(msg string) {
-	if !s.SaveHistory {
+	s.addMessage("user", msg)
+}
+
+// AddBotMessage adds a bot (assistant) message to the session history.
+func (s *Session) AddBotMessage(msg string) {
+	s.addMessage("assistant", msg)
+}
+
+func (s *Session) addMessage(from, msg string) {
+	if s.MaxHistory == 0 {
 		return
 	}
 	s.History = append(s.History, llm.ChatMessage{
 		From:    "user",
 		Message: msg,
 	})
-}
-
-// AddBotMessage adds a bot (assistant) message to the session history.
-func (s *Session) AddBotMessage(msg string) {
-	if !s.SaveHistory {
-		return
+	for len(s.History) > s.MaxHistory {
+		s.History = s.History[1:]
 	}
-	s.History = append(s.History, llm.ChatMessage{
-		From:    "assistant",
-		Message: msg,
-	})
 }

@@ -28,10 +28,7 @@ import (
 
 func main() {
     session := chat.NewSession()
-    resp, err := session.Prompt("Who was the 44th president of the US?")
-    if err != nil {
-        panic(err)
-    }
+    resp, _ := session.Prompt("Who was the 44th president of the US?")
     fmt.Println(resp) // "Barack Obama was the 44th president."
 }
 ```
@@ -161,16 +158,7 @@ func main() {
     session := chat.NewSession()
     session.SaveHistory = true
     resp, err := session.Prompt("Who was the 44th president of the US?")
-    if err != nil {
-        panic(err)
-    }
-    fmt.Println(resp) // "Barack Obama was the 44th president."
-
-    resp, err := session.Prompt("How tall is he?")
-    if err != nil {
-        panic(err)
-    }
-    fmt.Println(resp) // "Barack Obama was the 44th president."
+    resp, err = session.Prompt("How tall is he?")
 }
 ```
 

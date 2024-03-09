@@ -120,3 +120,4 @@ func (c *OpenAIClient) Query(prompt string, history []ChatMessage) (string, erro
 	out := response.Choices[0].Message.Content
 	return out, nil
 }
+

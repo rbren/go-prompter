@@ -34,12 +34,14 @@ type Gemini struct {
 	APIKey string
 }
 
+// NewGeminiClient initializes a new Gemini client with the provided API key.
 func NewGeminiClient(apiKey string) *Gemini {
 	return &Gemini{
 		APIKey: apiKey,
 	}
 }
 
+// Query sends a prompt and chat history to the Gemini API and returns the API's text response.
 func (g *Gemini) Query(prompt string, history []ChatMessage) (string, error) {
 	request := GeminiRequest{
 		Contents: []struct {
@@ -95,3 +97,4 @@ func (g *Gemini) Query(prompt string, history []ChatMessage) (string, error) {
 	text := response.Candidates[0].Content.Parts[0].Text
 	return text, nil
 }
+

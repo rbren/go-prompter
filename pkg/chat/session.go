@@ -10,12 +10,18 @@ import (
 	"github.com/rbren/go-prompter/pkg/llm"
 )
 
+var mainTemplateFS *embed.FS
+
+func SetMainFS(f *embed.FS) {
+	mainTemplateFS = f
+}
+
 // Session structures the session of a chat interaction, holding information necessary for communication and history.
 type Session struct {
 	LLM              llm.Client
 	History          []llm.ChatMessage
 	SessionID        string
-	SaveHistory      bool
+	MaxHistory       int
 	templateFS       *embed.FS
 	templateFuncMap  template.FuncMap
 	debugFileManager files.FileManager
@@ -26,6 +32,7 @@ func NewSession() *Session {
 	return &Session{
 		LLM:       llm.New(),
 		SessionID: uuid.New().String(),
+		templateFS: mainTemplateFS,
 	}
 }
 
