@@ -233,4 +233,3 @@ func (m S3Manager) CopyDirectory(sourcePrefix, destinationPrefix string) error {
 	}
 	return nil
 }
-

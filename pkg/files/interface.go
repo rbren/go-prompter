@@ -57,4 +57,3 @@ func GetFileManager() FileManager {
 	})
 	return singleton
 }
-

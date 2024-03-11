@@ -145,4 +145,3 @@ func (l LocalFileManager) CopyDirectory(sourcePrefix, destinationPrefix string) 
 			return ioutil.WriteFile(destPath, content, info.Mode())
 		})
 }
-

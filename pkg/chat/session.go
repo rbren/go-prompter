@@ -30,8 +30,8 @@ type Session struct {
 // NewSession creates and initializes a new chat session.
 func NewSession() *Session {
 	return &Session{
-		LLM:       llm.New(),
-		SessionID: uuid.New().String(),
+		LLM:        llm.New(),
+		SessionID:  uuid.New().String(),
 		templateFS: mainTemplateFS,
 	}
 }
