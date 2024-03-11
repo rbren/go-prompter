@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 )
@@ -36,30 +37,37 @@ type ClaudeResponse struct {
 
 // ClaudeClient holds the information needed to make requests to the Claude API.
 type ClaudeClient struct {
-	APIKey string
-	Model  string
+	APIKey    string
+	Model     string
+	Version   string
+	MaxTokens int
 }
 
 // NewClaudeClient creates a new Claude API client.
-func NewClaudeClient(apiKey, model string) *ClaudeClient {
+func NewClaudeClient(apiKey, model, version string) *ClaudeClient {
 	return &ClaudeClient{
-		APIKey: apiKey,
-		Model:  model,
+		APIKey:  apiKey,
+		Model:   model,
+		Version: version,
 	}
 }
 
 func NewClaudeClientFromEnv() *ClaudeClient {
-	return NewClaudeClient(os.Getenv("CLAUDE_API_KEY"), os.Getenv("CLAUDE_MODEL"))
+	client := NewClaudeClient(
+		os.Getenv("CLAUDE_API_KEY"),
+		os.Getenv("CLAUDE_MODEL"),
+		os.Getenv("CLAUDE_VERSION"))
+	client.MaxTokens = 1024
+	if maxTokens, err := strconv.Atoi(os.Getenv("OPENAI_MAX_TOKENS")); err == nil {
+		client.MaxTokens = maxTokens
+	}
+
+	return client
 }
 
 // Query sends a prompt to the Claude API and returns the response.
 func (c *ClaudeClient) Query(prompt string, history []ChatMessage) (string, error) {
-	systemPrompt := "The following is a conversation with an AI assistant."
-
-	messages := []ClaudeMessage{{
-		Role:    "system",
-		Content: systemPrompt,
-	}}
+	messages := []ClaudeMessage{}
 	for _, m := range history {
 		messages = append(messages, ClaudeMessage{
 			Role:    m.From,
@@ -72,21 +80,24 @@ func (c *ClaudeClient) Query(prompt string, history []ChatMessage) (string, erro
 	})
 
 	requestBody, err := json.Marshal(ClaudeRequest{
-		Messages: messages,
-		Model:    c.Model,
+		Messages:  messages,
+		Model:     c.Model,
+		MaxTokens: c.MaxTokens,
 	})
 	if err != nil {
 		return "", err
 	}
 	logrus.Debugf("request: %s", prompt)
 
-	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest("POST", "https://api.anthropic.com/v1/messages", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return "", err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+c.APIKey)
+	req.Header.Set("x-api-key", c.APIKey)
+	req.Header.Set("anthropic-version", c.Version)
+	fmt.Println("runnign with api key", c.APIKey)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
