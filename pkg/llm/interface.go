@@ -13,8 +13,8 @@ type Client interface {
 	Query(string, []ChatMessage) (string, error)
 }
 
-// New selects an LLM backend based on environment settings and initializes the appropriate client.
-func New() Client {
+// NewClientFromEnv selects an LLM backend based on environment settings and initializes the appropriate client.
+func NewClientFromEnv() Client {
 	var llmClient Client
 	if os.Getenv("LLM_BACKEND") == "HUGGING_FACE" {
 		llmClient = NewHuggingFaceClientFromEnv()

@@ -28,9 +28,15 @@ type Session struct {
 }
 
 // NewSession creates and initializes a new chat session.
-func NewSession() *Session {
+func NewSessionFromEnv() *Session {
+	llmClient := llm.NewClientFromEnv()
+	return NewSessionWithLLM(llmClient)
+}
+
+// NewSessionWithLLM creates and initializes a new chat session with a provided LLM client.
+func NewSessionWithLLM(llmClient llm.Client) *Session {
 	return &Session{
-		LLM:        llm.New(),
+		LLM:        llmClient,
 		SessionID:  uuid.New().String(),
 		templateFS: mainTemplateFS,
 	}

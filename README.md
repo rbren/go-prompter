@@ -11,10 +11,10 @@ This is a very early version of this library, and the API is likely to change.
 * Hugging Face models (experimental)
 
 ## Features
+* Prompt templating
+* Extract JSON, Markdown, and code from responses
 * Consistent interface for different models
 * Session management (currently only OpenAI and Claude)
-* Craft prompts using Go's text templating engine
-* Extract JSON, Markdown, and code from responses
 * Save prompts and responses to local files or S3 for debugging and analysis
 
 ## Usage
@@ -28,7 +28,7 @@ import (
 )
 
 func main() {
-    session := chat.NewSession()
+    session := chat.NewSessionFromEnv()
     resp, _ := session.Prompt("Who was the 44th president of the US?")
     fmt.Println(resp) // "Barack Obama was the 44th president."
 }
@@ -37,20 +37,24 @@ func main() {
 ### Select a Model
 You can use env vars to choose a backend and supply credentials.
 ```
-export HUGGING_FACE_API_KEY="hf_..."
-export HUGGING_FACE_URL="https://api-inference.huggingface.co/models/codellama/CodeLlama-70b-Instruct-hf"
-
 export OPENAI_API_KEY="sk-..."
 export OPENAI_MODEL="gpt-4-0125-preview"
 
 export GEMINI_API_KEY="AI..."
+
+export CLAUDE_API_KEY="sk-ant-api03..."
+export CLAUDE_MODEL="claude-3-opus-20240229"
+export CLAUDE_VERSION="2023-06-01"
+
+export HUGGING_FACE_API_KEY="hf_..."
+export HUGGING_FACE_URL="https://api-inference.huggingface.co/models/codellama/CodeLlama-70b-Instruct-hf"
 
 export LLM_BACKEND="OPENAI"
 ```
 
 The model will be automatically selected using the `LLM_BACKEND` env var when you run:
 ```go
-engine := prompt.New()
+session := chat.NewSessionFromEnv()
 ```
 
 You can also instantiate a specific model directly:
@@ -58,16 +62,13 @@ You can also instantiate a specific model directly:
 package main
 
 import (
+    "github.com/rbren/go-prompter/pkg/llm"
     "github.com/rbren/go-prompter/pkg/chat"
 )
 
 func main() {
-    model := llm.NewHuggingFaceClient(apiKey, url)
-    // or
     model := llm.NewOpenAIClient(apiKey, model)
-    // or
-    model := llm.NewGeminiClient(apiKey)
-    engine := prompt.Engine{LLM: model}
+    session := chat.NewSessionWithLLM(model)
 }
 ```
 
