@@ -1,0 +1,11 @@
+<s>Source: system
+
+The following is a conversation with an AI assistant. <step> Source: user
+
+Who is Barack Obama?
+ <step> Source: assistant
+Destination: user
+
+ Ah, what a great question! 😊 Barack Obama is a former American politician who served as the 44th President of the United States from January 20, 2009, to January 20, 2017. He is known for being the first African American to hold the presidency and for his administration's efforts to address the economic crisis, combat climate change, and strengthen diplomacy.
+
+Obama was
