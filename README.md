@@ -138,9 +138,6 @@ func main() {
 
     resp, _ := session.Prompt("Write an essay in Markdown about Obama")
     title := chat.ExtractMarkdownTitle(resp)
-
-
-    fmt.Println(resp) // "Barack Obama was the 44th president."
 }
 ```
 
@@ -158,7 +155,7 @@ import (
 
 func main() {
     session := chat.NewSession()
-    session.SaveHistory = true
+    session.MaxHistory = 4 // save 4 turns of conversation
     resp, err := session.Prompt("Who was the 44th president of the US?")
     resp, err = session.Prompt("How tall is he?")
 }
@@ -177,12 +174,14 @@ import (
 
 func main() {
     session := chat.NewSession()
-    session.SessionID = "presidents" // this will be a random UUID otherwise
     session.SetDebugFileManager(files.LocalFileManager{
       BasePath: "./debug/",
     })
+    session.SessionID = "presidents" // this will be a random UUID otherwise
     resp, err := session.PromptWithID("44", "Who was the 44th president of the US?")
-    // creates ./debug/presidents/44/prompt.md and ./debug/presidents/44/response.md
+    // created:
+    //   ./debug/presidents/44/prompt.md
+    //   ./debug/presidents/44/response.md
 }
 ```
 
