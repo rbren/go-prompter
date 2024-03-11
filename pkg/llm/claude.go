@@ -97,7 +97,6 @@ func (c *ClaudeClient) Query(prompt string, history []ChatMessage) (string, erro
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-api-key", c.APIKey)
 	req.Header.Set("anthropic-version", c.Version)
-	fmt.Println("runnign with api key", c.APIKey)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

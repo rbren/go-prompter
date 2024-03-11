@@ -73,7 +73,6 @@ func (c *HuggingFaceClient) Query(prompt string, history []ChatMessage) (string,
 	if err != nil {
 		return "", err
 	}
-	logrus.Infof("response: %s", string(body))
 
 	var response []map[string]interface{}
 	logrus.Debugf("response: %s", string(body))
