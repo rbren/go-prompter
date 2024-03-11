@@ -6,12 +6,13 @@ This is a very early version of this library, and the API is likely to change.
 
 ## Supported Backends
 * OpenAI's GPT
-* Google Gemini
-* Hugging Face (experimental)
+* Anthropic's Claude
+* Google's Gemini
+* Hugging Face models (experimental)
 
 ## Features
 * Consistent interface for different models
-* Session management (only OpenAI currently)
+* Session management (currently only OpenAI and Claude)
 * Craft prompts using Go's text templating engine
 * Extract JSON, Markdown, and code from responses
 * Save prompts and responses to local files or S3 for debugging and analysis
