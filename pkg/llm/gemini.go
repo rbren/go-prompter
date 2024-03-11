@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/sirupsen/logrus"
 )
@@ -39,6 +40,11 @@ func NewGeminiClient(apiKey string) *Gemini {
 	return &Gemini{
 		APIKey: apiKey,
 	}
+}
+
+// NewGeminiClientFromEnv initializes a new Gemini client with the API key from the environment.
+func NewGeminiClientFromEnv() *Gemini {
+	return NewGeminiClient(os.Getenv("GEMINI_API_KEY"))
 }
 
 // Query sends a prompt and chat history to the Gemini API and returns the API's text response.
@@ -97,4 +103,3 @@ func (g *Gemini) Query(prompt string, history []ChatMessage) (string, error) {
 	text := response.Candidates[0].Content.Parts[0].Text
 	return text, nil
 }
-

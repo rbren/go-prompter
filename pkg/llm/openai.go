@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 )
@@ -47,6 +49,14 @@ func NewOpenAIClient(apiKey, model string) *OpenAIClient {
 		APIKey: apiKey,
 		Model:  model,
 	}
+}
+
+func NewOpenAIClientFromEnv() *OpenAIClient {
+	client := NewOpenAIClient(os.Getenv("OPENAI_API_KEY"), os.Getenv("OPENAI_MODEL"))
+	if seed, err := strconv.Atoi(os.Getenv("OPENAI_SEED")); err == nil {
+		client.Seed = seed
+	}
+	return client
 }
 
 // Query sends a prompt to the OpenAI API and returns the response.
@@ -120,4 +130,3 @@ func (c *OpenAIClient) Query(prompt string, history []ChatMessage) (string, erro
 	out := response.Choices[0].Message.Content
 	return out, nil
 }
-

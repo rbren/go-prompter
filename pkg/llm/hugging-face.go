@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -31,6 +32,11 @@ func NewHuggingFaceClient(apiKey, url string) *HuggingFaceClient {
 		APIKey: apiKey,
 		URL:    url,
 	}
+}
+
+// NewHuggingFaceClientFromEnv creates a new HuggingFace API client using env variables.
+func NewHuggingFaceClientFromEnv() *HuggingFaceClient {
+	return NewHuggingFaceClient(os.Getenv("HUGGING_FACE_API_KEY"), os.Getenv("HUGGING_FACE_URL"))
 }
 
 // Query sends a prompt to the HuggingFace API and returns the response.
@@ -80,4 +86,3 @@ func (c *HuggingFaceClient) Query(prompt string, history []ChatMessage) (string,
 
 	return out, nil
 }
-

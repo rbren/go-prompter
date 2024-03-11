@@ -2,8 +2,6 @@ package llm
 
 import (
 	"os"
-
-	"github.com/sirupsen/logrus"
 )
 
 type ChatMessage struct {
@@ -19,16 +17,13 @@ type Client interface {
 func New() Client {
 	var llmClient Client
 	if os.Getenv("LLM_BACKEND") == "HUGGING_FACE" {
-		logrus.Infof("Using Hugging Face API")
-		llmClient = NewHuggingFaceClient(os.Getenv("HUGGING_FACE_API_KEY"), os.Getenv("HUGGING_FACE_URL"))
+		llmClient = NewHuggingFaceClientFromEnv()
 	} else if os.Getenv("LLM_BACKEND") == "GEMINI" {
-		gClient := NewGeminiClient(os.Getenv("GEMINI_API_KEY"))
-		llmClient = gClient
+		llmClient = NewGeminiClientFromEnv()
+	} else if os.Getenv("LLM_BACKEND") == "CLAUDE" {
+		llmClient = NewClaudeClientFromEnv()
 	} else {
-		oaiClient := NewOpenAIClient(os.Getenv("OPENAI_API_KEY"), os.Getenv("OPENAI_MODEL"))
-		oaiClient.Seed = 42
-		llmClient = oaiClient
+		llmClient = NewOpenAIClientFromEnv()
 	}
 	return llmClient
 }
-

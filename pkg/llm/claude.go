@@ -7,15 +7,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/sirupsen/logrus"
 )
 
 // ClaudeRequest represents the request body for Claude API.
 type ClaudeRequest struct {
-	Model    string          `json:"model"`
-	Messages []ClaudeMessage `json:"messages"`
-	MaxTokens     int             `json:"max_tokens,omitempty"`
+	Model     string          `json:"model"`
+	Messages  []ClaudeMessage `json:"messages"`
+	MaxTokens int             `json:"max_tokens,omitempty"`
 }
 
 // ClaudeMessage represents a message in the request body for Claude API.
@@ -45,6 +46,10 @@ func NewClaudeClient(apiKey, model string) *ClaudeClient {
 		APIKey: apiKey,
 		Model:  model,
 	}
+}
+
+func NewClaudeClientFromEnv() *ClaudeClient {
+	return NewClaudeClient(os.Getenv("CLAUDE_API_KEY"), os.Getenv("CLAUDE_MODEL"))
 }
 
 // Query sends a prompt to the Claude API and returns the response.
@@ -117,4 +122,3 @@ func (c *ClaudeClient) Query(prompt string, history []ChatMessage) (string, erro
 	out := response.Content[0].Text
 	return out, nil
 }
-
